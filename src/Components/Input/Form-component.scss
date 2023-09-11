@@ -1,0 +1,74 @@
+body {
+  background-color: #718093;
+  font-family: sans-serif;
+  color: #f5f6fa;
+}
+
+button {
+  transition: .2s;
+  padding: 10px;
+  background-color: #192a56;
+  color: #f5f6fa;
+  border: 1px solid #2f3640;
+  border-radius: 8px;
+  cursor: pointer;
+  
+  &:hover {
+    background-color: #273c75;
+    
+  }
+}
+
+.remove {
+  &:hover {
+    background-color: #c23616;
+  }
+}
+
+.form-component {
+  fieldset {
+    padding: 20px 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    align-items: center;
+    border: none;
+    background-color: #7f8fa6;
+    color: black;
+    border-radius: 10px;
+  }
+
+  legend {
+    font-size: larger;
+    font-weight: 500;
+  }
+
+  input {
+    border-radius: 10px;
+    border: none;
+    padding: 10px;
+    background-color: #2f3640;
+
+    &::placeholder {
+      color: #f5f6fa;
+    }
+  }
+
+  & &__checkboxes {
+    display: flex;
+    flex-direction: column;
+  }
+
+  & &__salary {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .add {
+    &:hover{
+      background-color: #44bd32;
+
+    }
+  }
+}

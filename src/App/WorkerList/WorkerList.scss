@@ -1,0 +1,41 @@
+.workers-component {
+  margin: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  background-color: #7f8fa6;
+  padding: 10px;
+  border-radius: 10px;
+
+  .head {
+    display: flex;
+    gap: 5px;
+    background-color: #487eb0;
+  }
+
+  & &__info {
+    display: flex;
+    gap: 5px;
+  }
+
+  & &__cell {
+    border-radius: 5px;
+    border: 2px solid #2f3640;
+    max-width: 200px;
+    width: 100%;
+    padding: 10px;
+  }
+  .id {
+    max-width: 20px;
+    color: #353b48;
+  }
+
+  .summary {
+    display: flex;
+    justify-content: flex-end;
+    color: #f5f6fa;
+    border-color: #273c75;
+  }
+
+  
+}
