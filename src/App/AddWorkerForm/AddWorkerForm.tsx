@@ -147,13 +147,14 @@ export const AddWorkerForm: React.FC = (): ReactElement => {
   };
 
   useEffect(() => {
+    setWorkerList(workersList);
+  }, []);
+
+  useEffect(() => {
     const storedWorkerList = JSON.parse(
       localStorage.getItem("workersList") || "[]"
     );
     setWorkerList(storedWorkerList);
-  }, []);
-
-  useEffect(() => {
     const initialTotalSalary = calculateTotalSalary(workersList);
     setTotalSalary(initialTotalSalary);
   }, [workersList]);
