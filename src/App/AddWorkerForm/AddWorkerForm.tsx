@@ -4,6 +4,8 @@ import { SearchWorker } from "../SearchWorker/SearchWorker";
 import { Worker } from "../../Interfaces";
 import { WorkersList } from "../WorkerList/WorkerList";
 import "../WorkerList/WorkerList.scss";
+import { useDispatch, useSelector } from "react-redux";
+import { addWorker } from "../../Redux/workerSlice";
 
 export const AddWorkerForm: React.FC = (): ReactElement => {
   const [formData, setFormData] = useState<Worker>({
@@ -15,64 +17,11 @@ export const AddWorkerForm: React.FC = (): ReactElement => {
     currency: "USD",
   });
 
-  const defaultWorkerList = [
-    {
-      id: 1,
-      firstName: "John",
-      lastName: "Smith",
-      department: "IT",
-      salary: "3000",
-      currency: "USD",
-    },
-    {
-      id: 2,
-      firstName: "Jane",
-      lastName: "Doe",
-      department: "IT",
-      salary: "3000.5",
-      currency: "USD",
-    },
-    {
-      id: 3,
-      firstName: "Bob",
-      lastName: "Coleman",
-      department: "Sales",
-      salary: "9000",
-      currency: "USD",
-    },
-    {
-      id: 4,
-      firstName: "Barbara",
-      lastName: "O'Connor",
-      department: "Sales",
-      salary: "4000",
-      currency: "USD",
-    },
-    {
-      id: 5,
-      firstName: "Adam",
-      lastName: "Murphy",
-      department: "Administration",
-      salary: "2000",
-      currency: "USD",
-    },
-  ];
+  const workersList = useSelector((state: any) => state.workers.value);
 
-  const [workersList, setWorkerList] = useState<Worker[]>(defaultWorkerList);
+  const dispatch = useDispatch();
 
-  const addWorker = (newWorker: Worker): void => {
-    const updatedWorkerList = [...workersList, newWorker];
-    setWorkerList(updatedWorkerList);
-    localStorage.setItem("workersList", JSON.stringify(updatedWorkerList));
-    setFormData({
-      id: 0,
-      firstName: "",
-      lastName: "",
-      department: "",
-      salary: "",
-      currency: "USD",
-    });
-  };
+  const departments = ["IT", "Sales", "Administration"];
 
   const calculateTotalSalary = (workersList: Worker[]) => {
     let totalSalary = 0;
@@ -93,7 +42,7 @@ export const AddWorkerForm: React.FC = (): ReactElement => {
     minSalary: number,
     maxSalary: number
   ) => {
-    const filteredWorkers = workersList.filter((worker) => {
+    const filteredWorkers = workersList.filter((worker: any) => {
       const { firstName, lastName, department, salary } = worker;
       const workerSalary = parseFloat(salary);
 
@@ -130,31 +79,30 @@ export const AddWorkerForm: React.FC = (): ReactElement => {
     });
   };
 
+  const handleSelectChange = (e: any) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const newWorker: Worker = { ...formData, id: workersList.length + 1 };
-    console.log("Dane z formularza:", formData);
-    addWorker(newWorker);
-  };
-
-  const removeLastWorker = () => {
-    if (workersList.length > 0) {
-      const updatedWorkersList = [...workersList];
-      updatedWorkersList.pop();
-      setWorkerList(updatedWorkersList);
-      localStorage.setItem("workersList", JSON.stringify(updatedWorkersList));
-    }
+    dispatch(addWorker(newWorker));
+    console.log("Nowy pracownik:", formData);
+    setFormData({
+      id: 0,
+      firstName: "",
+      lastName: "",
+      department: "",
+      salary: "",
+      currency: "USD",
+    });
   };
 
   useEffect(() => {
-    setWorkerList(workersList);
-  }, []);
-
-  useEffect(() => {
-    const storedWorkerList = JSON.parse(
-      localStorage.getItem("workersList") || "[]"
-    );
-    setWorkerList(storedWorkerList);
     const initialTotalSalary = calculateTotalSalary(workersList);
     setTotalSalary(initialTotalSalary);
   }, [workersList]);
@@ -170,7 +118,6 @@ export const AddWorkerForm: React.FC = (): ReactElement => {
       ) : (
         <WorkersList worker={workersList} totalSalary={totalSalary} />
       )}
-      <button className="remove" onClick={removeLastWorker}>Remove Last Worker</button>
       <form className="form-component" onSubmit={handleSubmit}>
         <fieldset>
           <legend>Add Worker</legend>
@@ -188,13 +135,18 @@ export const AddWorkerForm: React.FC = (): ReactElement => {
             onChange={handleInputChange}
             name="lastName"
           />
-          <Input
-            type="text"
-            placeholder="Department"
-            value={formData.department}
-            onChange={handleInputChange}
+          <select
             name="department"
-          />
+            value={formData.department}
+            onChange={(e) => handleSelectChange(e)}
+          >
+            <option value="">Select department...</option>
+            {departments.map((department, index) => (
+              <option key={index} value={department}>
+                {department}
+              </option>
+            ))}
+          </select>
           <Input
             type="text"
             placeholder="Salary"
@@ -202,7 +154,9 @@ export const AddWorkerForm: React.FC = (): ReactElement => {
             onChange={handleInputChange}
             name="salary"
           />
-          <button className="add" type="submit">Add Worker</button>
+          <button className="add" type="submit">
+            Add Worker
+          </button>
         </fieldset>
       </form>
     </>
