@@ -1,7 +1,7 @@
 import "./Form-component.scss";
 
 export interface InputProps {
-  type: string;
+  type: "text" | "number";
   placeholder: string;
   value: string;
   name?: string;
